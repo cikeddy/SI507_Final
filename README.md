@@ -1,1 +1,3 @@
-# SI507_Final
+# Exercise Generator
+
+My project will aggregate information about exercises and muscles and will allow a user to input criteria to a form that will be used to randomly select an exercise. The project will allow also users to access information about muscles and muscle groups that exercises activate. There will be a route for the homepage with a greeting and count of number of exercises and muscles in the application. There will be another route where users will be able to enter criteria that will be used to display information about a random exercise. Finally, there will be a route for viewing information about muscles and exercises they are related to. If there is enough time I will add a feature of creating a workout.

@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup 
 from advanced_expiry_caching import Cache #importing from the cache code from Jackie
 import requests
+import csv
 import os
 from flask import Flask, render_template, session, redirect, url_for # tools that will make it easier to build on things
 from flask_sqlalchemy import SQLAlchemy
@@ -22,36 +23,39 @@ session = db.session
 ### Models ###
 
 ##association Table between exercise and mechanics
-#collections = db.Table('collections',db.Column('genre_id',db.Integer, db.ForeignKey('genres.id')),db.Column('director_id',db.Integer, db.ForeignKey('directors.id')))
+exercise_groups = db.Table('exercise_groups',db.Column('exercise_id',db.Integer, db.ForeignKey('exercises.id')),db.Column('utility_id',db.Integer, db.ForeignKey('utilities.id')))
 
 
 
 
-#class Exercise(db.Model):
-#    __tablename__ = "exercises"
-#    id = db.Column(db.Integer, primary_key=True)
-#    name = db.Column(db.String(64), unique=True)
-#    movies = db.Column(db.Integer, db.ForeignKey('movies.id'))
-#    
-#class Director(db.Model):
-#    __tablename__ = "directors"
-#    id = db.Column(db.Integer, primary_key=True)
-#    name = db.Column(db.String(64),unique=True)
-#    genres = db.relationship('Genre', secondary=collections, backref=db.backref('directors',lazy='dynamic'),lazy='dynamic')
-#    movies = db.relationship('Movie',backref ='Director') 
-#
+class Exercise(db.Model):
+    __tablename__ = "exercises"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    utility = db.relationship('Utility', secondary=exercise_groups, backref=db.backref('exercises',lazy='dynamic'),lazy="dynamic")
+    mechanics = db.Column(db.String(64))
+    force = db.Column(db.String(64))
+    instructions = db.Column(db.String(64))
+    target_muscle = db.Column(db.Integer, db.ForeignKey('muscles.id'))
+
+    
 #    def __repr__(self):
 #        return "{} by {} | {}".format(self.name)
-#
-#class Movie(db.Model):
-#    __tablename__ = "movies"
-#    id = db.Column(db.Integer, primary_key=True)
-#    name = db.Column(db.String(64))
-#    director_id = db.Column(db.Integer, db.ForeignKey('directors.id'))
-#    genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'))
 #    
-#    def __repr__(self):
-#        return "{} (ID: {})".format(self.name,self.id)
+class Utility(db.Model):
+    __tablename__ = "utilities"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64),unique=True)
+    exercises = db.relationship('Exercise', secondary=exercise_groups, backref=db.backref('utilities',lazy='dynamic'),lazy="dynamic")
+#
+class Muscle(db.Model):
+    __tablename__ = "muscles"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    body_part = db.Column(db.String(64))
+    exercise = db.Column(db.Integer, db.ForeignKey('exercises.id'))
+#    
+    
     
 
 
@@ -90,10 +94,6 @@ muscles = soup.find('a', href = "../../Kinesiology/Glossary#Target").next_siblin
 #
 #print(target_element)
 
-#synergists = []
-#
-#for x in obj.find_all("ul"):
-#    synergists.append(x)
 #
 #print(muscles)
 
@@ -101,22 +101,42 @@ muscles = soup.find('a', href = "../../Kinesiology/Glossary#Target").next_siblin
 #function to pull all of the exercise links 
 #function to randomize which exercise is returned 
 
+#
+#class Exercise():
+#    def __init__(self, page):
+#        self.name = page.find("h1").text
+#        self.utility = []
+#        self.mechanics = page.find_all("td")[3].text
+#        self.force = page.find_all("td")[5].text
+#        self.instructions = page.find_all("p")[2].text +page.find_all("p")[4].text
+#        self.target_muscle = page.find_all("div", class_="col-sm-6")[1].find_all("ul")[0].text
+#    
+#        for child in page.find_all('td')[1].find_all('a'):
+#            self.utility.append(child.text)
+#        
+#new_ex = Exercise(soup)
+#
+##print(new_ex.utility)
+#
+#with open("muscles.csv","r",encoding="utf8") as f:
+#    reader = csv.reader(f)
+#    data = []
+#    for i in reader:
+#        data.append(i)
+#
+#class Muscle():
+#    def __init__(self, row):
+#        self.name = row[0]
+#        self.body_part = row[1]
+#        
+#new_mus = Muscle(data[1])
 
-class Exercise():
-    def __init__(self, page):
-        self.name = page.find("h1").text
-        self.utility = []
-        self.mechanics = page.find_all("td")[3].text
-        self.force = page.find_all("td")[5].text
-        self.instructions = page.find_all("p")[2].text +page.find_all("p")[4].text
-        self.target_muscle = page.find_all("div", class_="col-sm-6")[1].find_all("ul")[0].text
-    
-        for child in page.find_all('td')[1].find_all('a'):
-            self.utility.append(child.text)
-        
-new_ex = Exercise(soup)
+#print(new_mus.body_part)
 
-print(new_ex.utility)
+if __name__ == '__main__':
+    db.create_all() 
+    app.run()
+
 
 
 

@@ -10,7 +10,7 @@ My project will aggregate information about exercises and muscles and will allow
 
 
 ## My Database Schema
-!Exercise Generator Project Schema](database_diagram.jpg)
+![Exercise Generator Project Schema](database_diagram.jpg)
 
 ## How to run
 

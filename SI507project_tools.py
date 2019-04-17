@@ -22,39 +22,41 @@ session = db.session
 
 ### Models ###
 
-##association Table between exercise and mechanics
+##association Table between exercise and utilities
 exercise_groups = db.Table('exercise_groups',db.Column('exercise_id',db.Integer, db.ForeignKey('exercises.id')),db.Column('utility_id',db.Integer, db.ForeignKey('utilities.id')))
 
 
-
-
-class Exercise(db.Model):
-    __tablename__ = "exercises"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    utility = db.relationship('Utility', secondary=exercise_groups, backref=db.backref('exercises',lazy='dynamic'),lazy="dynamic")
-    mechanics = db.Column(db.String(64))
-    force = db.Column(db.String(64))
-    instructions = db.Column(db.String(64))
-    target_muscle = db.Column(db.Integer, db.ForeignKey('muscles.id'))
-
-    
-#    def __repr__(self):
-#        return "{} by {} | {}".format(self.name)
-#    
+#
 class Utility(db.Model):
     __tablename__ = "utilities"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64),unique=True)
-    exercises = db.relationship('Exercise', secondary=exercise_groups, backref=db.backref('utilities',lazy='dynamic'),lazy="dynamic")
-#
+    exercise = db.relationship('Exercise', secondary=exercise_groups, backref=db.backref('utilities',lazy='dynamic'),lazy="dynamic")
+
+
 class Muscle(db.Model):
     __tablename__ = "muscles"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     body_part = db.Column(db.String(64))
     exercise = db.Column(db.Integer, db.ForeignKey('exercises.id'))
+
+class Exercise(db.Model):
+    __tablename__ = "exercises"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    mechanics = db.Column(db.String(64))
+    force = db.Column(db.String(64))
+    instructions = db.Column(db.String(64))
+    target_muscle = db.Column(db.Integer, db.ForeignKey('muscles.id'))
+    utility_id = db.Column(db.Integer, db.ForeignKey('utilities.id'))
+#
 #    
+#    def __repr__(self):
+#        return "{} by {} | {}".format(self.name)
+    
+
+##    
     
     
 
@@ -102,40 +104,64 @@ muscles = soup.find('a', href = "../../Kinesiology/Glossary#Target").next_siblin
 #function to randomize which exercise is returned 
 
 #
-#class Exercise():
-#    def __init__(self, page):
-#        self.name = page.find("h1").text
-#        self.utility = []
-#        self.mechanics = page.find_all("td")[3].text
-#        self.force = page.find_all("td")[5].text
-#        self.instructions = page.find_all("p")[2].text +page.find_all("p")[4].text
-#        self.target_muscle = page.find_all("div", class_="col-sm-6")[1].find_all("ul")[0].text
-#    
-#        for child in page.find_all('td')[1].find_all('a'):
-#            self.utility.append(child.text)
-#        
-#new_ex = Exercise(soup)
+class ExerciseObj():
+    def __init__(self, page):
+        self.name = page.find("h1").text
+        self.utility = []
+        self.mechanics = page.find_all("td")[3].text
+        self.force = page.find_all("td")[5].text
+        self.instructions = page.find_all("p")[2].text +page.find_all("p")[4].text
+        self.target_muscle = page.find_all("div", class_="col-sm-6")[1].find_all("ul")[0].text
+    
+        for child in page.find_all('td')[1].find_all('a'):
+            self.utility.append(child.text)
+        
+new_ex = ExerciseObj(soup)
+
+#print(new_ex.utility)
 #
-##print(new_ex.utility)
-#
+new_ex_utility = Utility(name=new_ex.utility[0])
+session.add(new_ex_utility)
+session.commit()
+
+
+new_ex_muscle = Muscle(name=new_ex.target_muscle)
+#session.add(new_ex_utility)
+session.add(new_ex_muscle)
+session.commit()
+session.add(Exercise(name=new_ex.name,utility_id=new_ex_utility.id,mechanics=new_ex.mechanics,force=new_ex.force,instructions=new_ex.instructions, target_muscle=new_ex_muscle.id))
+session.commit()
+
+##
 #with open("muscles.csv","r",encoding="utf8") as f:
 #    reader = csv.reader(f)
 #    data = []
 #    for i in reader:
 #        data.append(i)
 #
-#class Muscle():
+#class MuscleRow():
 #    def __init__(self, row):
 #        self.name = row[0]
 #        self.body_part = row[1]
 #        
-#new_mus = Muscle(data[1])
+#    def __str__(self):
+#        return "{} is part of the {}".format(self.name,self.body_part)
+#    
+#muscles = []    
+#for row in data:
+#    muscles.append(MuscleRow(row))
+    
+
+#for muscle in muscles:
+#    new_entry = Muscle(name=muscle.name,body_part=muscle.body_part)
+#    session.add(new_entry)
+#    session.commit()
 
 #print(new_mus.body_part)
+    
 
 if __name__ == '__main__':
     db.create_all() 
-    app.run()
 
 
 

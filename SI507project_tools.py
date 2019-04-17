@@ -7,9 +7,6 @@ import os
 from flask import Flask, render_template, session, redirect, url_for # tools that will make it easier to build on things
 from flask_sqlalchemy import SQLAlchemy
 
-from sqlalchemy import create_engine
-engine = create_engine('sqlite:///./exercises_muscles.db')
-print (engine.table_names())
 
 
 app = Flask(__name__)
@@ -230,8 +227,7 @@ class ExerciseObj():
 #print(new_mus.body_part)
 
 #####################################################
-    
-print(engine.table_names())
+
 
 if __name__ == '__main__':
     db.create_all() 

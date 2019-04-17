@@ -1,6 +1,7 @@
 from SI507project_tools import *
 import unittest
 from bs4 import BeautifulSoup 
+from sqlalchemy import create_engine
 
 
 ## check that random_ex returns something from a know muscle and that it returns two different exercises in one query 
@@ -49,10 +50,11 @@ class PartFour(unittest.TestCase):
         
 
 ## check that the database has all expected tables
-#class PartFive(unittest.TestCase):
-#    def test_database_tables(self):
-#        self.muscles_table = 
-#        self.assertIsNoteNone(self.data)
+class PartFive(unittest.TestCase):
+    def test_database_tables(self):
+        self.engine = create_engine('sqlite:///./exercises_muscles.db')
+        self.table_names = self.engine.table_names()
+        self.assertEqual(self.table_names,['exercise_groups', 'exercises', 'forces', 'mechanics', 'muscles', 'utilities'])
 
 
 if __name__ == "__main__":

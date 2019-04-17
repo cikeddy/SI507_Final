@@ -1,10 +1,15 @@
 from bs4 import BeautifulSoup 
 from advanced_expiry_caching import Cache #importing from the cache code from Jackie
 import requests
+import random
 import csv
 import os
 from flask import Flask, render_template, session, redirect, url_for # tools that will make it easier to build on things
 from flask_sqlalchemy import SQLAlchemy
+
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///./exercises_muscles.db')
+print (engine.table_names())
 
 
 app = Flask(__name__)
@@ -23,7 +28,7 @@ session = db.session
 ### Models ###
 
 ##association Table between exercise and utilities
-exercise_groups = db.Table('exercise_groups',db.Column('exercise_id',db.Integer, db.ForeignKey('exercises.id')),db.Column('utility_id',db.Integer, db.ForeignKey('utilities.id')))
+exercise_groups = db.Table('exercise_groups',db.Column('mechanic_id',db.Integer, db.ForeignKey('mechanics.id')),db.Column('utility_id',db.Integer, db.ForeignKey('utilities.id')))
 
 
 #
@@ -31,32 +36,68 @@ class Utility(db.Model):
     __tablename__ = "utilities"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64),unique=True)
-    exercise = db.relationship('Exercise', secondary=exercise_groups, backref=db.backref('utilities',lazy='dynamic'),lazy="dynamic")
+    mechanics = db.relationship('Mechanic', secondary=exercise_groups, backref=db.backref('utilities',lazy='dynamic'),lazy="dynamic")
 
 
 class Muscle(db.Model):
     __tablename__ = "muscles"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    body_part = db.Column(db.String(64))
-    exercise = db.Column(db.Integer, db.ForeignKey('exercises.id'))
+    exercises = db.relationship('Exercise',backref = 'Muscle')
+#
+class Mechanic(db.Model):
+    __tablename__ = "mechanics"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    exercises = db.relationship('Exercise',backref = 'Mechanic')
 
+class Force(db.Model):
+    __tablename__ = "forces"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    exercises = db.relationship('Exercise',backref = 'Force')
+    
+# exercise class will only include name and instructions, everything else will be foreignkeys to other attributes
 class Exercise(db.Model):
     __tablename__ = "exercises"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    mechanics = db.Column(db.String(64))
-    force = db.Column(db.String(64))
     instructions = db.Column(db.String(64))
-    target_muscle = db.Column(db.Integer, db.ForeignKey('muscles.id'))
+    mechanic_id = db.Column(db.Integer, db.ForeignKey('mechanics.id'))
+    force_id = db.Column(db.Integer, db.ForeignKey('forces.id'))
+    target_muscle_id = db.Column(db.Integer, db.ForeignKey('muscles.id'))
     utility_id = db.Column(db.Integer, db.ForeignKey('utilities.id'))
-#
-#    
+
+
+
+
+
 #    def __repr__(self):
 #        return "{} by {} | {}".format(self.name)
     
 
-##    
+### Helper functions ###
+
+
+def get_or_create_exercise(exercise_name, description):
+    exercise = Exercise.query.filter_by(name=exercise_name).first()
+    if exercise:
+        return exercise
+    else:
+        exercise = Exercise(name=exercise_name,instructions=description)
+        session.add(exercise)
+        session.commit()
+        return exercise
+
+def get_or_create_muscle(muscle_name):
+    muscle = Muscle.query.filter_by(name=muscle_name).first()
+    if muscle:
+        return muscle
+    else:
+        muscle = Muscle(name=muscle_name)
+        session.add(muscle)
+        session.commit()
+        return muscle
     
     
 
@@ -79,10 +120,35 @@ if not data:
 
     program_cache.set(base_url, data, expire_in_days=10) # this data isn't going to change very much
 
+
+print(type(data))
+
 soup = BeautifulSoup(data, "html.parser")
 
 obj =  soup.find_all("div", class_="col-sm-6")[1]
-muscles = soup.find('a', href = "../../Kinesiology/Glossary#Target").next_sibling.next_sibling
+
+print(type(soup))
+
+
+#### this variable (ex_pages) will be a list of all the links to exercise pages
+## will write a function that pulls links from the directory and concatinates with base url to produce full URL and returns the list ex_pages
+
+def get_exercise_links(start_page):
+    ex_pages = []
+    return ex_pages
+
+
+##this function will return two random exercises that are different from each other but based on a user entry of muscle
+def get_random_exercises(muscle):
+    exercises = Exercise.query.filter_by(target_muscle=muscle).all()
+    random.shuffle(exercises)
+    exercise_lst = []
+    for i in data[:1]:
+        exercise_lst.append(Exercise(i))
+    return exercise_lst
+
+#### trying something out to find the target muscle
+#muscles = soup.find('a', href = "../../Kinesiology/Glossary#Target").next_sibling.next_sibling
 
            
 #muscles = obj.find("a", href="../../Kinesiology/Glossary#Target")
@@ -100,7 +166,7 @@ muscles = soup.find('a', href = "../../Kinesiology/Glossary#Target").next_siblin
 #print(muscles)
 
                     
-#function to pull all of the exercise links 
+
 #function to randomize which exercise is returned 
 
 #
@@ -116,23 +182,27 @@ class ExerciseObj():
         for child in page.find_all('td')[1].find_all('a'):
             self.utility.append(child.text)
         
-new_ex = ExerciseObj(soup)
+#new_ex = ExerciseObj(soup)
 
 #print(new_ex.utility)
 #
-new_ex_utility = Utility(name=new_ex.utility[0])
-session.add(new_ex_utility)
-session.commit()
 
 
-new_ex_muscle = Muscle(name=new_ex.target_muscle)
+######### testing out adding to the database#########
+#new_ex_utility = Utility(name=new_ex.utility[0])
 #session.add(new_ex_utility)
-session.add(new_ex_muscle)
-session.commit()
-session.add(Exercise(name=new_ex.name,utility_id=new_ex_utility.id,mechanics=new_ex.mechanics,force=new_ex.force,instructions=new_ex.instructions, target_muscle=new_ex_muscle.id))
-session.commit()
+#session.commit()
+#
+#
+#new_ex_muscle = Muscle(name=new_ex.target_muscle)
+##session.add(new_ex_utility)
+#session.add(new_ex_muscle)
+#session.commit()
+#session.add(Exercise(name=new_ex.name,utility_id=new_ex_utility.id,mechanics=new_ex.mechanics,force=new_ex.force,instructions=new_ex.instructions, target_muscle=new_ex_muscle.id))
+#session.commit()
+######################################################
 
-##
+######### testing out the csv ######################
 #with open("muscles.csv","r",encoding="utf8") as f:
 #    reader = csv.reader(f)
 #    data = []
@@ -158,7 +228,10 @@ session.commit()
 #    session.commit()
 
 #print(new_mus.body_part)
+
+#####################################################
     
+print(engine.table_names())
 
 if __name__ == '__main__':
     db.create_all() 

@@ -6,38 +6,34 @@
 
 ## Project Description
 
-My project will aggregate information about exercises and muscles and will allow a user to input criteria to a form that will be used to randomly select an exercise. The project will allow also users to access information about muscles and muscle groups that exercises activate. There will be a route for the homepage with a greeting and count of number of exercises and muscles in the application. There will be another route where users will be able to enter criteria that will be used to display information about a random exercise. Finally, there will be a route for viewing information about muscles and exercises they are related to. If there is enough time I will add a feature of creating a workout.
+My project will aggregate information about exercises and muscles and will allow a user to input criteria to a form that will be used to randomly select an exercise. The project will allow also users to access information about muscles that exercises activate along with exercise characteristics. There will be a route for the homepage with a greeting and count of number of exercises and muscles in the application. There will be another route where users will be able to enter criteria that will be used to display information about a random exercise. Finally, there will be a route for viewing information about exercises and muscles they are related to. If there is enough time I will add a feature of creating a workout.
 
 ## How to run
 
-1. First, you should ... (e.g. install all requirements with `pip install -r requirements.txt`)
-2. Second, you should ... (e.g. run `python programname.py runserver` or whatever else is appropriate)
-3. Anything else
+1. Install all requirements with `pip install -r requirements.txt`
+2. Run `python SI507project_tools.py` 
+3. more steps to come
 
-## How to use
+## How to use (still working on this)
 
 1. A useful instruction goes here
 2. A useful second step here
 3. (Optional): Markdown syntax to include an screenshot/image: ![alt text](image.jpg)
 
 ## Routes in this application (not yet created)
-- `/home` -> this is the home page
-- `/form` -> this route has a form for user input
-- `/result` -> this route is where the form sends the result...
-- `/newuser/<username>` -> this route also takes input of a name and shows you a greeting
+- `/home` -> this is the home page with a count of exercises
+- `/form` -> this route has a form for user input for selecting criteria for exercise display
+- `/result` -> this route is where the form sends the result and displays relevant exercises
+- `/exercises/<exercise>` -> this route is a page with  exercise information
 
 ## How to run tests
-1. First... (e.g. access a certain directory if necessary)
-2. Second (e.g. any other setup necessary)
-3. etc (e.g. run the specific test file)
-NOTE: Need not have 3 steps, but should have as many as are appropriate!
+- make sure you have run the project before running the tests
+1. Run `SI507project_tests.py`
 
 ## In this repository:
-- Directory Name
-  - File in directory
-  - File in directory
-- File name
-- File name
+- SI507project_tests.py
+- SI507project_tools.py
+- advanced_expiry_caching.py
 
 ---
 ## Code Requirements for Grading

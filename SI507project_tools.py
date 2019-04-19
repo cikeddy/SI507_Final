@@ -78,7 +78,7 @@ class Exercise(db.Model):
 
 
 def get_or_create_exercise(exercise_name, utility, force, mechanic,instructions, target_muscle):
-    exercise = Exercise.query.filter_by(name=exercise_name, utility_id=utility, force_id=force, mechanic_id=mechanic,instructions=instructions, target_muscle_id=target_muscle).first()
+    exercise = Exercise.query.filter_by(name=exercise_name).first()
     if exercise:
         return exercise
     else:
@@ -132,13 +132,13 @@ def get_or_create_muscle(muscle_name):
 
 
 ######### testing out adding to the database#########
-#for ex in exercises_list:
-#    utility = get_or_create_utility(ex.utility)
-#    force = get_or_create_force(ex.force)
-#    mechanics = get_or_create_mech(ex.mechanics)
-#    muscle = get_or_create_muscle(ex.target_muscle)
-#    get_or_create_exercise(ex.name,utility.id, force.id, mechanics.id,ex.instructions, muscle.id))
-#    session.commit()
+for ex in exercises_list:
+    utility = get_or_create_utility(ex.utility)
+    force = get_or_create_force(ex.force)
+    mechanics = get_or_create_mech(ex.mechanics)
+    muscle = get_or_create_muscle(ex.target_muscle)
+    get_or_create_exercise(ex.name,utility.id, force.id, mechanics.id,ex.instructions, muscle.id)
+    session.commit()
 
 #
 #new_ex_muscle = Muscle(name=new_ex.target_muscle)

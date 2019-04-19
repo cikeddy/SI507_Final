@@ -4,7 +4,7 @@ import requests
 import random
 import csv
 import os
-from flask import Flask, render_template, session, redirect, url_for # tools that will make it easier to build on things
+from flask import Flask, request, render_template, session, redirect, url_for # tools that will make it easier to build on things
 from flask_sqlalchemy import SQLAlchemy
 from SI507project_data import exercises_list
 
@@ -132,24 +132,46 @@ def get_or_create_muscle(muscle_name):
 
 
 ######### testing out adding to the database#########
-for ex in exercises_list:
-    utility = get_or_create_utility(ex.utility)
-    force = get_or_create_force(ex.force)
-    mechanics = get_or_create_mech(ex.mechanics)
-    muscle = get_or_create_muscle(ex.target_muscle)
-    get_or_create_exercise(ex.name,utility.id, force.id, mechanics.id,ex.instructions, muscle.id)
-    session.commit()
+#for ex in exercises_list:
+#    utility = get_or_create_utility(ex.utility)
+#    force = get_or_create_force(ex.force)
+#    mechanics = get_or_create_mech(ex.mechanics)
+#    muscle = get_or_create_muscle(ex.target_muscle)
+#    get_or_create_exercise(ex.name,utility.id, force.id, mechanics.id,ex.instructions, muscle.id)
+#    session.commit()
 
-#
-#new_ex_muscle = Muscle(name=new_ex.target_muscle)
-##session.add(new_ex_utility)
-#session.add(new_ex_muscle)
-#session.commit()
-#session.add(Exercise(name=new_ex.name,utility_id=new_ex_utility.id,mechanics=new_ex.mechanics,force=new_ex.force,instructions=new_ex.instructions, target_muscle=new_ex_muscle.id))
-#session.commit()
 ######################################################
 
-######### testing out the csv ######################
+
+######### Routes #########################
+@app.route('/home')
+def index():
+    exercises = Exercise.query.all()
+    num_exercises = len(exercises)
+    return "{} exercises in the database".format(num_exercises)
+#    return render_template('index.html', num_movies=num_movies)
+    
+@app.route('/selection')
+def form1():
+    return render_template('selection_form.html')
+
+
+@app.route('/result',methods=["GET"])
+def result_form1():
+    if request.method == "GET":
+        print(request.args)
+        if len(request.args) > 0:
+            for k in request.args:
+                exercise = request.args.get(k,"None")
+                exercise = Exercise.query.filter_by(name=exercise).first()
+                if not exercise:
+                    return "Exercise does not exist"
+            return "Here is your exercise information <ul><li>{}</li><li>{}</li></ul> <a href='http://localhost:5000/selection'>select another exercise</a>".format(exercise.name,exercise.instructions)
+
+
+
+
+############# testing out the csv ######################
 #with open("muscles.csv","r",encoding="utf8") as f:
 #    reader = csv.reader(f)
 #    data = []
@@ -180,7 +202,8 @@ for ex in exercises_list:
 
 
 if __name__ == '__main__':
-    db.create_all() 
+    db.create_all()
+    app.run()
 
 
 

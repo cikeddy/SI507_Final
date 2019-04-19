@@ -6,6 +6,7 @@ import csv
 import os
 from flask import Flask, render_template, session, redirect, url_for # tools that will make it easier to build on things
 from flask_sqlalchemy import SQLAlchemy
+from SI507project_data import exercises_list
 
 
 
@@ -14,7 +15,7 @@ app.debug = False
 app.use_reloader = True
 app.config['SECRET_KEY'] = 'Xslfdksfojsdf'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./exercises_muscles.db' 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./exercises.db' 
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -32,7 +33,7 @@ exercise_groups = db.Table('exercise_groups',db.Column('mechanic_id',db.Integer,
 class Utility(db.Model):
     __tablename__ = "utilities"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64),unique=True)
+    name = db.Column(db.String(64))
     mechanics = db.relationship('Mechanic', secondary=exercise_groups, backref=db.backref('utilities',lazy='dynamic'),lazy="dynamic")
 
 
@@ -76,15 +77,45 @@ class Exercise(db.Model):
 ### Helper functions ###
 
 
-def get_or_create_exercise(exercise_name, description):
-    exercise = Exercise.query.filter_by(name=exercise_name).first()
+def get_or_create_exercise(exercise_name, utility, force, mechanic,instructions, target_muscle):
+    exercise = Exercise.query.filter_by(name=exercise_name, utility_id=utility, force_id=force, mechanic_id=mechanic,instructions=instructions, target_muscle_id=target_muscle).first()
     if exercise:
         return exercise
     else:
-        exercise = Exercise(name=exercise_name,instructions=description)
+        exercise = Exercise(name=exercise_name, utility_id=utility, force_id=force, mechanic_id=mechanic,instructions=instructions, target_muscle_id=target_muscle)
         session.add(exercise)
         session.commit()
         return exercise
+
+def get_or_create_utility(utility_name):
+    utility = Utility.query.filter_by(name=utility_name).first()
+    if utility:
+        return utility
+    else:
+        utility = Utility(name=utility_name)
+        session.add(utility)
+        session.commit()
+        return utility
+    
+def get_or_create_mech(mech_name):
+    mechanic = Mechanic.query.filter_by(name=mech_name).first()
+    if mechanic:
+        return mechanic
+    else:
+        mechanic = Mechanic(name=mech_name)
+        session.add(mechanic)
+        session.commit()
+        return mechanic
+    
+def get_or_create_force(force_name):
+    force = Force.query.filter_by(name=force_name).first()
+    if force:
+        return force
+    else:
+        force = Force(name=force_name)
+        session.add(force)
+        session.commit()
+        return force
 
 def get_or_create_muscle(muscle_name):
     muscle = Muscle.query.filter_by(name=muscle_name).first()
@@ -99,97 +130,16 @@ def get_or_create_muscle(muscle_name):
     
 
 
-###########
-
-
-
-FILENAME = "exrx_cache.json"
-
-program_cache = Cache(FILENAME) 
-
-
-#exploring one exercise page
-base_url = "https://exrx.net/WeightExercises/Sternocleidomastoid/CBNeckFlx"
-
-data = program_cache.get(base_url)
-if not data:
-    data = requests.get(base_url).text
-
-    program_cache.set(base_url, data, expire_in_days=10) # this data isn't going to change very much
-
-
-print(type(data))
-
-soup = BeautifulSoup(data, "html.parser")
-
-obj =  soup.find_all("div", class_="col-sm-6")[1]
-
-print(type(soup))
-
-
-#### this variable (ex_pages) will be a list of all the links to exercise pages
-## will write a function that pulls links from the directory and concatinates with base url to produce full URL and returns the list ex_pages
-
-def get_exercise_links(start_page):
-    ex_pages = []
-    return ex_pages
-
-
-##this function will return two random exercises that are different from each other but based on a user entry of muscle
-def get_random_exercises(muscle):
-    exercises = Exercise.query.filter_by(target_muscle=muscle).all()
-    random.shuffle(exercises)
-    exercise_lst = []
-    for i in data[:1]:
-        exercise_lst.append(Exercise(i))
-    return exercise_lst
-
-#### trying something out to find the target muscle
-#muscles = soup.find('a', href = "../../Kinesiology/Glossary#Target").next_sibling.next_sibling
-
-           
-#muscles = obj.find("a", href="../../Kinesiology/Glossary#Target")
-#
-#obj_2 = soup.find_all("div", target_="_parent").element
-
-#obj = [tag for tag in soup.find_all('a', class_="col-sm-6") if tag.href == "https://exrx.net/Kinesiology/Glossary#Target")
-
-#target_element = soup.find_parent('a', href= "../../Kinesiology/Glossary#Target")
-#
-#
-#print(target_element)
-
-#
-#print(muscles)
-
-                    
-
-#function to randomize which exercise is returned 
-
-#
-class ExerciseObj():
-    def __init__(self, page):
-        self.name = page.find("h1").text
-        self.utility = []
-        self.mechanics = page.find_all("td")[3].text
-        self.force = page.find_all("td")[5].text
-        self.instructions = page.find_all("p")[2].text +page.find_all("p")[4].text
-        self.target_muscle = page.find_all("div", class_="col-sm-6")[1].find_all("ul")[0].text
-    
-        for child in page.find_all('td')[1].find_all('a'):
-            self.utility.append(child.text)
-        
-#new_ex = ExerciseObj(soup)
-
-#print(new_ex.utility)
-#
-
 
 ######### testing out adding to the database#########
-#new_ex_utility = Utility(name=new_ex.utility[0])
-#session.add(new_ex_utility)
-#session.commit()
-#
+#for ex in exercises_list:
+#    utility = get_or_create_utility(ex.utility)
+#    force = get_or_create_force(ex.force)
+#    mechanics = get_or_create_mech(ex.mechanics)
+#    muscle = get_or_create_muscle(ex.target_muscle)
+#    get_or_create_exercise(ex.name,utility.id, force.id, mechanics.id,ex.instructions, muscle.id))
+#    session.commit()
+
 #
 #new_ex_muscle = Muscle(name=new_ex.target_muscle)
 ##session.add(new_ex_utility)

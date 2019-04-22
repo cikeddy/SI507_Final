@@ -6,7 +6,7 @@ import csv
 import os
 from flask import Flask, request, render_template, session, redirect, url_for # tools that will make it easier to build on things
 from flask_sqlalchemy import SQLAlchemy
-from SI507project_data import exercises_list
+#from SI507project_data import exercises_list
 
 
 
@@ -19,6 +19,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./exercises.db'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+#db.init(app)
 
 db = SQLAlchemy(app) 
 session = db.session 
@@ -68,8 +69,6 @@ class Exercise(db.Model):
 
 
 
-
-
 #    def __repr__(self):
 #        return "{} by {} | {}".format(self.name)
     
@@ -87,15 +86,15 @@ def get_or_create_exercise(exercise_name, utility, force, mechanic,instructions,
         session.commit()
         return exercise
 
-def get_or_create_utility(utility_name):
+def get_or_create_utility(utility_name, mech_name):
+    mechanic = get_or_create_mech(mech_name)
     utility = Utility.query.filter_by(name=utility_name).first()
-    if utility:
-        return utility
-    else:
-        utility = Utility(name=utility_name)
-        session.add(utility)
-        session.commit()
-        return utility
+    if not utility:
+       utility = Utility(name=utility_name)
+    utility.mechanics.append(mechanic)
+    session.add(utility)
+    session.commit()
+    return utility
     
 def get_or_create_mech(mech_name):
     mechanic = Mechanic.query.filter_by(name=mech_name).first()
@@ -127,18 +126,31 @@ def get_or_create_muscle(muscle_name):
         session.commit()
         return muscle
     
-    
+###this function will return two random exercises that are different from each other but based on a user entry of muscle
+def get_random_exercises_m(muscle):
+    exercises = Exercise.query.filter_by(target_muscle=muscle).all()
+    data = random.shuffle(exercises)
+    exercise_lst = []
+    for i in data[:1]:
+        exercise_lst.append(Exercise(i))
+    return exercise_lst
+
+###this function will return two random exercises that are different from each other but based on a user entry of muscle
+def get_random_exercise():
+    exercises = Exercise.query.all()
+    random.shuffle(exercises)
+    return exercises[1].name
 
 
 
 ######### testing out adding to the database#########
 #for ex in exercises_list:
-#    utility = get_or_create_utility(ex.utility)
+#    utility = get_or_create_utility(ex.utility,ex.mechanics)
 #    force = get_or_create_force(ex.force)
-#    mechanics = get_or_create_mech(ex.mechanics)
+##    mechanics = get_or_create_mech(ex.mechanics)
 #    muscle = get_or_create_muscle(ex.target_muscle)
 #    get_or_create_exercise(ex.name,utility.id, force.id, mechanics.id,ex.instructions, muscle.id)
-#    session.commit()
+#
 
 ######################################################
 
@@ -148,12 +160,15 @@ def get_or_create_muscle(muscle_name):
 def index():
     exercises = Exercise.query.all()
     num_exercises = len(exercises)
-    return "{} exercises in the database".format(num_exercises)
+    return "<h1> Welome to the Exercise Generator!</h1> <p>There are currently {} exercises in the database</p>".format(num_exercises)
 #    return render_template('index.html', num_movies=num_movies)
     
-@app.route('/selection')
+
+### routes to search for an exercise 
+
+@app.route('/search')
 def form1():
-    return render_template('selection_form.html')
+    return render_template('search_form.html')
 
 
 @app.route('/result',methods=["GET"])
@@ -162,11 +177,28 @@ def result_form1():
         print(request.args)
         if len(request.args) > 0:
             for k in request.args:
-                exercise = request.args.get(k,"None")
-                exercise = Exercise.query.filter_by(name=exercise).first()
+                exercise_name = request.args.get(k,"None")
+                exercise = Exercise.query.filter_by(name=exercise_name).first()
+                utility = Utility.query.filter_by(id=exercise.utility_id).first()
+                mechanics = Mechanic.query.filter_by(id=exercise.mechanic_id).first()
+                force = Force.query.filter_by(id=exercise.force_id).first()
+                muscle = Muscle.query.filter_by(id=exercise.target_muscle_id).first()
                 if not exercise:
                     return "Exercise does not exist"
-            return "Here is your exercise information <ul><li>{}</li><li>{}</li></ul> <a href='http://localhost:5000/selection'>select another exercise</a>".format(exercise.name,exercise.instructions)
+            return render_template('search_result.html',exercise=exercise, utility=utility, mechanics=mechanics, force=force, muscle=muscle)
+
+### one page to request a random exercise 
+@app.route('/random')
+def result2_form1():
+    exercise_name = get_random_exercise()
+    exercise = Exercise.query.filter_by(name=exercise_name).first()
+    utility = Utility.query.filter_by(id=exercise.utility_id).first()
+    mechanics = Mechanic.query.filter_by(id=exercise.mechanic_id).first()
+    force = Force.query.filter_by(id=exercise.force_id).first()
+    muscle = Muscle.query.filter_by(id=exercise.target_muscle_id).first()
+    return render_template('search_result.html',exercise=exercise, utility=utility, mechanics=mechanics, force=force, muscle=muscle)
+        
+### one page to request a workout by 
 
 
 
@@ -203,6 +235,7 @@ def result_form1():
 
 if __name__ == '__main__':
     db.create_all()
+    
     app.run()
 
 

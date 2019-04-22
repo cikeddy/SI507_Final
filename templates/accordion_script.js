@@ -1,3 +1,4 @@
+// from https://www.w3schools.com/howto/howto_js_accordion.asp
 let acc = document.getElementsByClassName("accordion");
 let i;
 

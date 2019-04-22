@@ -24,11 +24,11 @@ class ExerciseObj():
             self.force = "N/A"
         try:
             self.instructions = page.find_all("p")[2].text +page.find_all("p")[4].text.strip()
-        except:
+        except IndexError:
             self.instructions = "N/A"
         try: 
             self.target_muscle = page.find_all("div", class_="col-sm-6")[1].find_all("ul")[0].text.strip()
-        except:
+        except IndexError:
             self.target_muscle = "N/A"
         
 #        try:
@@ -152,10 +152,6 @@ for url in final_exercise_urls:
     new_ex = ExerciseObj(soup)
     exercises_list.append(new_ex)
 
-print(len(exercises_list))
-
-#for ex in exercises_list[:5]:
-#    print(ex.csv_row())
 
 with open("exercise_data.csv","w", newline="") as f:
     writer = csv.writer(f, delimiter=",")
@@ -176,13 +172,5 @@ with open("exercise_data.csv","w", newline="") as f:
 #    return ex_pages
 #
 #
-###this function will return two random exercises that are different from each other but based on a user entry of muscle
-#def get_random_exercises(muscle):
-#    exercises = Exercise.query.filter_by(target_muscle=muscle).all()
-#    random.shuffle(exercises)
-#    exercise_lst = []
-#    for i in data[:1]:
-#        exercise_lst.append(Exercise(i))
-#    return exercise_lst
 
                     

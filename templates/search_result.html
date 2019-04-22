@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/html5reset.css') }}">
+<style> 
+
+body {
+	font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, "sans-serif";
+}
+
+/******start accordion code adapted from https://www.w3schools.com/howto/howto_js_accordion.asp ******/
+
+
+
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  text-align: left;
+  border: 1px;
+  outline: none;
+  transition: 0.4s;
+}
+
+
+.active, .accordion:hover {
+  background-color: #ccc;
+}
+
+.panel {
+  width: 99%;
+  align-content: center;
+  padding: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-bottom: 16px;
+  background-color: transparent;
+  display: none;
+  overflow: hidden;
+}
+
+.panel p {
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+button.accordion {
+  margin: 0px;
+  border: solid #1E0303;
+  border-radius: 3px;
+}
+
+.accordion-container {
+  margin-bottom: 16px;
+  width: 50%;
+}
+
+
+.accordion:after {
+  content: '\02795'; 
+  color: #1E0303;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2796"; 
+}
+
+button.button {
+     color: white;
+	 height: 10vh;
+	 text-transform: uppercase;
+	 padding: 5vh;
+	 min-width: 10vh;
+	 background: rgb(66, 184, 221);
+	 border-radius: 4px;
+     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+/*********** end code adapted from https://www.w3schools.com/howto/howto_js_accordion.asp************************/
+</style>
+</head>
+<body>
+<h1>{{exercise.name}}</h1>
+<h2>Information</h2>
+<h3> Instructions </h3>
+<p>{{exercise.instructions}}</p></div>
+<div class="accordion-container">
+<button class="accordion"><h3>Utility</h3></button>
+<div class="panel"><p>{{utility.name}}</p></div>
+<button class="accordion"><h3>Mechanics</h3></button>
+<div class="panel"><p>{{mechanics.name}}</p></div>
+<button class="accordion"><h3>Force</h3></button>
+<div class="panel"><p>{{force.name}}</p></div>
+<button class="accordion"><h3>Target Muscle</h3></button>
+<div class="panel"><p>{{muscle.name}}</p></div>
+<button class="button" onclick="window.location.href='http://localhost:5000/search'">search for another exercise</button>
+<button class="button" onclick="window.location.href='http://localhost:5000/random'">get a random exercise</button>
+{% block javascript %}
+    <script type="text/javascript">
+        {% include "accordion_script.js" %}
+    </script>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/html5reset.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<h1>Search the Database for an Exercise</h1>
+<p>You can input the name of any exercise from the database to find instructions and information about the exercise. </p>
+<form action="http://localhost:5000/result" method='GET'>
+    <input type="text" name="exercise"><br>
+    <input type="submit" value="Submit">
+</form>
+<button onclick="window.location.href='http://localhost:5000/random'">get a random exercise</button>
+
+</body>
+</html>

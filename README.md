@@ -58,6 +58,17 @@ My project aggregates information about exercises from ExRx.com (through web scr
 - database_diagram.jpg
 - requirements.txt
 - README.md
+- /images
+    - accordion.JPG
+    - app_run.JPG
+    - exercise_search.JPG
+    - muscle_search.JPG
+    - all_exercises.JPG
+    - database_diagram.jpg
+    - homepage.JPG
+    - all_muscles.JPG
+    - exercise_result.JPG
+    - muscle_result.JPG
 - /templates
     - accordion_script.js
     - index.html

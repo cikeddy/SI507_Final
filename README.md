@@ -20,19 +20,19 @@ My project aggregates information about exercises from ExRx.com (through web scr
 
 ## How to use
 
-1. When the application is running the following will be visible in the terminal ![picture of local server runnning](app_run.jpg)
-2. When you are on the [home page](http://localhost:5000/home) you should see the following ![the homepage of the exercise generator project](homepage.jpg)
+1. When the application is running the following will be visible in the terminal ![picture of local server runnning](app_run.JPG)
+2. When you are on the [home page](http://localhost:5000/home) you should see the following ![the homepage of the exercise generator project](homepage.JPG)
 
 3. From the home page you can chose to search by exercise, muscle, or randomly generate an exercise. You can also view a full list of exercises by clicking the "View all exercises" button or you can view a full list of muscles by clicking the "View all muscles" button.
-    - VIEW ALL EXERCISES button will take you to a page that looks like this ![the view all exercises page](all_exercises.jpg)
-    - VIEW ALL MUSCLES button will take you to a page that looks like this ![the view all muscles page](all_muscles.jpg)
+    - VIEW ALL EXERCISES button will take you to a page that looks like this ![the view all exercises page](all_exercises.JPG)
+    - VIEW ALL MUSCLES button will take you to a page that looks like this ![the view all muscles page](all_muscles.JPG)
 4. You can start by searching `Cable Neck Flexion`, `Triceps Dip`, or another exercise you find on the full list of exercises
-    - The search page for exercises will look like this ![the exercise search page](exercise_search.jpg)
-    - The results page of an exercise will look like this ![an exercise search result page](exercise_result.jpg)
-    - You can expand the accordion menu by clicking on panels to find out more information about an exercise ![expanding the accordion menu of the exercise search result page](accordion.jpg)
+    - The search page for exercises will look like this ![the exercise search page](exercise_search.JPG)
+    - The results page of an exercise will look like this ![an exercise search result page](exercise_result.JPG)
+    - You can expand the accordion menu by clicking on panels to find out more information about an exercise ![expanding the accordion menu of the exercise search result page](accordion.JPG)
 5. Alternatively, you can randomly pull data about an exercise and search for the target muscle to find other related exercises
-    - The search page for muscles will look like this ![a muscles search page](muscle_search.jpg)
-    - The result page for a muscle search will look like this ![a muscles search result page](muscle_result.jpg)
+    - The search page for muscles will look like this ![a muscles search page](muscle_search.JPG)
+    - The result page for a muscle search will look like this ![a muscles search result page](muscle_result.JPG)
 
 ## Routes in this application
 - `/home` -> this is the home page with a count of exercises

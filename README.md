@@ -88,8 +88,8 @@ Below is a list of the requirements listed in the rubric for you to copy and pas
 - [x] Includes a clear and readable README.md that follows this template
 - [x] Includes a sample .sqlite/.db file
 - [x] Includes a diagram of your database schema
-- [ ] Includes EVERY file needed in order to run the project
-- [ ] Includes screenshots and/or clear descriptions of what your project should look like when it is working
+- [x] Includes EVERY file needed in order to run the project
+- [x] Includes screenshots and/or clear descriptions of what your project should look like when it is working
 
 ### Flask Application
 - [x] Includes at least 3 different routes

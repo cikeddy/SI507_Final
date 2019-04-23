@@ -161,6 +161,8 @@ with open("exercise_data.csv","w", newline="") as f:
 
 
 
+
+
 #### this variable (ex_pages) will be a list of all the links to exercise pages
 ## will write a function that pulls links from the directory and concatinates with base url to produce full URL and returns the list ex_pages
 ### for the first level of the directory, I will only need to links from the top level of 

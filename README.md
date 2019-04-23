@@ -9,7 +9,7 @@ My project aggregates information about exercises from ExRx.com (through web scr
 
 
 ## My Database Schema
-![Exercise Generator Project Schema](database_diagram.jpg)
+![Exercise Generator Project Schema](images/database_diagram.jpg)
 
 ## How to run
 

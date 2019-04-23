@@ -77,14 +77,16 @@ def result_form1():
         if len(request.args) > 0:
             for k in request.args:
                 exercise_name = request.args.get(k,"None")
-                exercise = Exercise.query.filter_by(name=exercise_name).first()
-                utility = Utility.query.filter_by(id=exercise.utility_id).first()
-                mechanics = Mechanic.query.filter_by(id=exercise.mechanic_id).first()
-                force = Force.query.filter_by(id=exercise.force_id).first()
-                muscle = Muscle.query.filter_by(id=exercise.target_muscle_id).first()
-                if not exercise:
-                    return "Exercise does not exist"
-            return render_template('search_result.html',exercise=exercise, utility=utility, mechanics=mechanics, force=force, muscle=muscle)
+                try:
+                    exercise = Exercise.query.filter_by(name=exercise_name).first()
+                    utility = Utility.query.filter_by(id=exercise.utility_id).first()
+                    mechanics = Mechanic.query.filter_by(id=exercise.mechanic_id).first()
+                    force = Force.query.filter_by(id=exercise.force_id).first()
+                    muscle = Muscle.query.filter_by(id=exercise.target_muscle_id).first()
+                    return render_template('search_result.html',exercise=exercise, utility=utility, mechanics=mechanics, force=force, muscle=muscle)
+                except AttributeError:
+                    return render_template('invalid_search.html')
+
 
 ### one page to request a random exercise 
 @app.route('/random')

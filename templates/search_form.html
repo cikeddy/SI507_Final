@@ -70,17 +70,35 @@ input[type=text]{
 	height: 40px;
 	width: 250px; 
 	}
+
+#error {
+	color: red;
+	display: none;
+}
 </style>
 </head>
 <body>
-<h1>Search the Database for an Exercise</h1>
+<h1>Search the Database by Exercise</h1>
 <p>You can input the name of any exercise from the database to find instructions and information about the exercise. </p>
 <p> To find a random exercise, hit the random exercise button</p>
-<form action="http://localhost:5000/result" method='GET'>
-    <input type="text" name="exercise"><br>
-    <input type="submit" value="Submit"> 
+<form action="http://localhost:5000/result" method='GET' onSubmit="return checkForm()">
+    <input type="text" name="exercise" id="exercise"><br>
+    <div id="error"> <p>Please enter an exercise</p> </div>
+    <input type="submit" value="Search"> 
 </form>
 <button class="button" onclick="window.location.href='http://localhost:5000/random'">random exercise</button>
 
 </body>
+<script>
+function checkForm(){
+    let exercise_len = document.getElementById('exercise').value.length;
+    let error_msg = document.getElementById('error').style.display;
+    if  (exercise_len == 0) {
+        return false;
+        error_msg = block;
+        }
+    else {
+        return true;
+    }}
+</script>
 </html>

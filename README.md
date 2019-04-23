@@ -5,8 +5,7 @@
 ---
 
 ## Project Description
-
-My project will aggregate information about exercises and muscles and will allow a user to input criteria to a form that will be used to randomly select an exercise. The project will allow also users to access information about muscles that exercises activate along with exercise characteristics. There will be a route for the homepage with a greeting and count of number of exercises and muscles in the application. There will be another route where users will be able to enter criteria that will be used to display information about a random exercise. Finally, there will be a route for viewing information about exercises and muscles they are related to. If there is enough time I will add a feature of creating a workout.
+My project aggregates information about exercises from ExRx.com (through web scraping) and allows users to search by exercise name to get information about an exercise. The project  also allows users to search for a muscle and recieve a list of associated exercises that target that muscle. There is a route for the homepage with a greeting and count of number of exercises. There are also routes for searching by exercise, muscle, and for viewing a randomly selected exercise with corresponding information. Finally there are routes that show all exercises and muscles in the database.
 
 
 ## My Database Schema
@@ -16,28 +15,42 @@ My project will aggregate information about exercises and muscles and will allow
 
 1. Install all requirements with `pip install -r requirements.txt`
 2. Run `python SI507project_tools.py` 
-3. more steps to come
+3. Check that `exercises.db` and `exrx_cache.json` are in the directory with the project
+4. Navigate to the [home route](http://localhost:5000/home) to begin using the application
 
-## How to use (still working on this)
+## How to use
 
-1. A useful instruction goes here
-2. A useful second step here
-3. (Optional): Markdown syntax to include an screenshot/image: ![alt text](image.jpg)
+1. When the application is running the following will be visible in the terminal ![picture of local server runnning](app_run.jpg)
+2. When you are on the [home page](http://localhost:5000/home) you should see the following ![the homepage of the exercise generator project](homepage.jpg)
 
-## Routes in this application (not yet created)
+3. From the home page you can chose to search by exercise, muscle, or randomly generate an exercise. You can also view a full list of exercises by clicking the "View all exercises" button or you can view a full list of muscles by clicking the "View all muscles" button.
+4. You can start by searching `Cable Neck Flexion`, `Triceps Dip`, or another exercise you find on the full list of exercises
+5. Alternatively, you can randomly pull data about an exercise and search for the target muscle to find other related exercises
+
+## Routes in this application
 - `/home` -> this is the home page with a count of exercises
+- `/all-exercises` -> this is page with a list of all exercises in the database
+- `/all-muscles` -> this is the page with a list of all muscles in the database
 - `/search` -> this route has a form for user input for either searching an exercise by name or randomly
-- `/result` -> this route is where the form sends the result and displays information about an exercise
-- `/` -> this route is a page with  exercise information
+- `/muscle-search` -> this route has a form for user input for either searching an exercises by target muscle  or randomly
+- `/result` -> this route is where the form sends the result and displays information about an exercise when it is searched by name
+- `/muscle` -> this route is where the form sends the result and displays a list of exercises related to a target muscle
+- `/random` -> this route is where the form sends the result and displays information about a randomly selected exercise
 
 ## How to run tests
 - make sure you have run the project before running the tests
 1. Run `SI507project_tests.py`
 
 ## In this repository:
-- SI507project_tests.py
+- SI507project_data.py
 - SI507project_tools.py
+- SI507project_models.py
+- SI507project_tests.py
 - advanced_expiry_caching.py
+- database_diagram.jpg
+- requirements.txt
+- README.md
+- 
 
 ---
 ## Code Requirements for Grading
@@ -59,11 +72,11 @@ Below is a list of the requirements listed in the rubric for you to copy and pas
 - [ ] Includes screenshots and/or clear descriptions of what your project should look like when it is working
 
 ### Flask Application
-- [ ] Includes at least 3 different routes
-- [ ] View/s a user can see when the application runs that are understandable/legible for someone who has NOT taken this course
-- [ ] Interactions with a database that has at least 2 tables
+- [x] Includes at least 3 different routes
+- [x] View/s a user can see when the application runs that are understandable/legible for someone who has NOT taken this course
+- [x] Interactions with a database that has at least 2 tables
 - [x] At least 1 relationship between 2 tables in database
-- [ ] Information stored in the database is viewed or interacted with in some way
+- [x] Information stored in the database is viewed or interacted with in some way
 
 ### Additional Components (at least 6 required)
 - [ ] Use of a new module
@@ -77,7 +90,7 @@ Below is a list of the requirements listed in the rubric for you to copy and pas
 - [ ] Relevant use of `itertools` and/or `collections`
 - [x] Sourcing of data using web scraping
 - [ ] Sourcing of data using web REST API requests
-- [x] Sourcing of data using user input and/or a downloaded .csv or .json dataset
+- [ ] Sourcing of data using user input and/or a downloaded .csv or .json dataset
 - [x] Caching of data you continually retrieve from the internet in some way
 
 ### Submission

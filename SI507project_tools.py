@@ -7,6 +7,7 @@ import os
 from flask import Flask, request, render_template, session, redirect, url_for # tools that will make it easier to build on things
 from flask_sqlalchemy import SQLAlchemy
 from SI507project_models import *
+from SI507project_data import get_data, obj
 
 
 
@@ -41,33 +42,22 @@ def get_random_exercise():
     return exercises[1].name
 
 
-
-######### testing out adding to the database#########
-#for ex in exercises_list:
-#    utility = get_or_create_utility(ex.utility,ex.mechanics)
-#    force = get_or_create_force(ex.force)
-##    mechanics = get_or_create_mech(ex.mechanics)
-#    muscle = get_or_create_muscle(ex.target_muscle)
-#    get_or_create_exercise(ex.name,utility.id, force.id, mechanics.id,ex.instructions, muscle.id)
-#
-
-######################################################
-
-
 ######### Routes #########################
 @app.route('/home')
 def index():
     exercises = Exercise.query.all()
     num_exercises = len(exercises)
-    return "<h1> Welome to the Exercise Generator!</h1> <p>There are currently {} exercises in the database</p>".format(num_exercises)
-#    return render_template('index.html', num_movies=num_movies)
-    
+    return render_template('index.html',num_exercises=num_exercises)
 
 ### routes to search for an exercise 
 
 @app.route('/search')
 def form1():
     return render_template('search_form.html')
+
+@app.route('/muscle-search')
+def form2():
+    return render_template('muscle_search.html')
 
 
 @app.route('/result',methods=["GET"])
@@ -76,16 +66,16 @@ def result_form1():
         print(request.args)
         if len(request.args) > 0:
             for k in request.args:
-                exercise_name = request.args.get(k,"None")
+                exercise_name = request.args.get(k,"None").lower()
                 try:
-                    exercise = Exercise.query.filter_by(name=exercise_name).first()
+                    exercise = Exercise.query.filter_by(name=exercise_name.lower()).first()
                     utility = Utility.query.filter_by(id=exercise.utility_id).first()
                     mechanics = Mechanic.query.filter_by(id=exercise.mechanic_id).first()
                     force = Force.query.filter_by(id=exercise.force_id).first()
                     muscle = Muscle.query.filter_by(id=exercise.target_muscle_id).first()
                     return render_template('search_result.html',exercise=exercise, utility=utility, mechanics=mechanics, force=force, muscle=muscle)
                 except AttributeError:
-                    return render_template('invalid_search.html')
+                    return render_template('invalid_search.html', item='Exercise')
 
 
 ### one page to request a random exercise 
@@ -99,42 +89,42 @@ def result2_form1():
     muscle = Muscle.query.filter_by(id=exercise.target_muscle_id).first()
     return render_template('search_result.html',exercise=exercise, utility=utility, mechanics=mechanics, force=force, muscle=muscle)
         
-### one page to request a workout by 
+### one page to request an exercise by muscle
+@app.route('/muscle')
+def result_form2():
+    if request.method == "GET":
+        if len(request.args) > 0:
+                for k in request.args:
+                    muscle_name = request.args.get(k, "None").lower()
+                    try:
+                        muscle = Muscle.query.filter_by(name=muscle_name).first()
+                        exercises = Exercise.query.filter_by(target_muscle_id=muscle.id)
+                        return render_template('muscle_search_result.html', muscle=muscle.name, exercises=exercises)
+                    except:
+                        return render_template('invalid_search.html', item='Muscle')
 
 
+## one page to view all muscles
+@app.route('/all-muscles')
+def data_view1():
+    muscles = Muscle.query.all()
+    return render_template('all_muscles.html', muscles=muscles)
 
+@app.route('/all-exercises')
+def data_view2():
+    exercises = Exercise.query.all()
+    return render_template('all_exercises.html', exercises=exercises)
 
-############# testing out the csv ######################
-#with open("muscles.csv","r",encoding="utf8") as f:
-#    reader = csv.reader(f)
-#    data = []
-#    for i in reader:
-#        data.append(i)
-#
-#class MuscleRow():
-#    def __init__(self, row):
-#        self.name = row[0]
-#        self.body_part = row[1]
-#        
-#    def __str__(self):
-#        return "{} is part of the {}".format(self.name,self.body_part)
-#    
-#muscles = []    
-#for row in data:
-#    muscles.append(MuscleRow(row))
-    
-
-#for muscle in muscles:
-#    new_entry = Muscle(name=muscle.name,body_part=muscle.body_part)
-#    session.add(new_entry)
-#    session.commit()
-
-#print(new_mus.body_part)
-
-#####################################################
 
 
 if __name__ == '__main__':
+    db.create_all()
     if not db.session.query(Exercise).first():
-        db.create_all()
+        for ex in exercises_list:
+            utility = get_or_create_utility(ex.utility,ex.mechanics)
+            force = get_or_create_force(ex.force)
+            mechanics = get_or_create_mech(ex.mechanics)
+            muscle = get_or_create_muscle(ex.target_muscle)
+            get_or_create_exercise(ex.name,utility.id, force.id, mechanics.id,ex.instructions, muscle.id)
+    
     app.run()

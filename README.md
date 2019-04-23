@@ -5,7 +5,7 @@
 ---
 
 ## Project Description
-My project aggregates information about exercises from ExRx.com (through web scraping) and allows users to search by exercise name to get information about an exercise. The project  also allows users to search for a muscle and recieve a list of associated exercises that target that muscle. There is a route for the homepage with a greeting and count of number of exercises. There are also routes for searching by exercise, muscle, and for viewing a randomly selected exercise with corresponding information. Finally there are routes that show all exercises and muscles in the database.
+My project aggregates information about exercises from ExRx.net (through web scraping) and allows users to search by exercise name to get information about an exercise. The project  also allows users to search for a muscle and recieve a list of associated exercises that target that muscle. There is a route for the homepage with a greeting and count of number of exercises. There are also routes for searching by exercise, muscle, and for viewing a randomly selected exercise with corresponding information. Finally there are routes that show all exercises and muscles in the database.
 
 
 ## My Database Schema

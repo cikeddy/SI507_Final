@@ -26,16 +26,8 @@ db.init_app(app)
 
 
     
-###this function will return two random exercises that are different from each other but based on a user entry of muscle
-def get_random_exercises_m(muscle):
-    exercises = Exercise.query.filter_by(target_muscle=muscle).all()
-    data = random.shuffle(exercises)
-    exercise_lst = []
-    for i in data[:1]:
-        exercise_lst.append(Exercise(i))
-    return exercise_lst
 
-###this function will return two random exercises that are different from each other but based on a user entry of muscle
+###this function will return a random exercise
 def get_random_exercise():
     exercises = Exercise.query.all()
     random.shuffle(exercises)
@@ -119,7 +111,8 @@ def data_view2():
 
 if __name__ == '__main__':
     db.create_all()
-    if not db.session.query(Exercise).first():
+    if not Exercise.query.first():
+        exercises_list= get_data(obj)
         for ex in exercises_list:
             utility = get_or_create_utility(ex.utility,ex.mechanics)
             force = get_or_create_force(ex.force)

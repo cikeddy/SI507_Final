@@ -26,9 +26,9 @@ My project will aggregate information about exercises and muscles and will allow
 
 ## Routes in this application (not yet created)
 - `/home` -> this is the home page with a count of exercises
-- `/form` -> this route has a form for user input for selecting criteria for exercise display
-- `/result` -> this route is where the form sends the result and displays relevant exercises
-- `/exercises/<exercise>` -> this route is a page with  exercise information
+- `/search` -> this route has a form for user input for either searching an exercise by name or randomly
+- `/result` -> this route is where the form sends the result and displays information about an exercise
+- `/` -> this route is a page with  exercise information
 
 ## How to run tests
 - make sure you have run the project before running the tests

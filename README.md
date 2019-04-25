@@ -14,8 +14,10 @@ My project aggregates information about exercises from ExRx.net (through web scr
 ## How to run
 
 1. Install all requirements with `pip install -r requirements.txt`
-2. Run `python SI507project_tools.py` 
-3. Check that `exercises.db` and `exrx_cache.json` are in the directory with the project
+2. Check that `exercises.db` and `exrx_cache.json` are in the directory with the project
+3. Run `python SI507project_tools.py` 
+    - to prevent too many requests to exrx.net, I have inserted a sleep function into the scraping script (.5 seconds per exercise page that is requested). Because there are almost 1000 pages, the scraping process takes over 10 minutes. I have uploaded my populated cache  `exrx_cache.json` and database `exercises.db` files so users do not have to scrape unless they choose to
+    - if you would like to scrape the data yourself, remove the `exrx_cache.json` and `exercises.db` files from the directory before running the `SI507project_tools.py` file
 4. Navigate to the [home route](http://localhost:5000/home) to begin using the application
 
 ## How to use
@@ -30,10 +32,11 @@ My project aggregates information about exercises from ExRx.net (through web scr
     - The search page for exercises will look like this ![the exercise search page](images/exercise_search.JPG)
     - The results page of an exercise will look like this ![an exercise search result page](images/exercise_result.JPG)
     - You can expand the accordion menu by clicking on panels to find out more information about an exercise ![expanding the accordion menu of the exercise search result page](images/accordion.JPG)
-5. You can also start by searching for a muscle, such as `pectoralis major, clavicular`, on the muscle search page.
-6. Alternatively, you can randomly pull data about an exercise and search for the target muscle to find other related exercises
+5. You can also start by searching for a muscle, such as `pectoralis major, clavicular`, on the muscle search page
     - The search page for muscles will look like this ![a muscles search page](images/muscle_search.JPG)
     - The result page for a muscle search will look like this ![a muscles search result page](images/muscle_result.JPG)
+6. Alternatively, you can randomly pull data about an exercise and search for the target muscle for that exercse to find other related exercises
+
 
 ## Routes in this application
 - `/home` -> this is the home page with a count of exercises

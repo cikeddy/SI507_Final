@@ -5,7 +5,7 @@
 ---
 
 ## Project Description
-My project aggregates information about exercises from ExRx.net (through web scraping) and allows users to search by exercise name to get information about an exercise. The project  also allows users to search for a muscle and recieve a list of associated exercises that target that muscle. There is a route for the homepage with a greeting and count of number of exercises. There are also routes for searching by exercise, muscle, and for viewing a randomly selected exercise with corresponding information. Finally there are routes that show all exercises and muscles in the database.
+My project aggregates information about exercises from ExRx.net (through web scraping) and allows users to search by exercise name to get information about an exercise. The project  also allows users to search for a muscle and recieve a list of associated exercises that target that muscle. There is a route for the homepage with a greeting and count of number of exercises. There are also routes for searching by exercise, by muscle, and for viewing a randomly selected exercise with corresponding information. Finally there are routes that show all exercises and muscles in the database.
 
 
 ## My Database Schema
@@ -23,14 +23,15 @@ My project aggregates information about exercises from ExRx.net (through web scr
 1. When the application is running the following will be visible in the terminal ![picture of local server runnning](images/app_run.JPG)
 2. When you are on the [home page](http://localhost:5000/home) you should see the following ![the homepage of the exercise generator project](images/homepage.JPG)
 
-3. From the home page you can chose to search by exercise, muscle, or randomly generate an exercise. You can also view a full list of exercises by clicking the "View all exercises" button or you can view a full list of muscles by clicking the "View all muscles" button.
+3. From the home page you can chose to search by exercise, by muscle, or randomly generate an exercise. You can also view a full list of exercises by clicking the "View all exercises" button or you can view a full list of muscles by clicking the "View all muscles" button.
     - VIEW ALL EXERCISES button will take you to a page that looks like this ![the view all exercises page](images/all_exercises.JPG)
     - VIEW ALL MUSCLES button will take you to a page that looks like this ![the view all muscles page](images/all_muscles.JPG)
 4. You can start by searching `Cable Neck Flexion`, `Triceps Dip`, or another exercise you find on the full list of exercises
     - The search page for exercises will look like this ![the exercise search page](images/exercise_search.JPG)
     - The results page of an exercise will look like this ![an exercise search result page](images/exercise_result.JPG)
     - You can expand the accordion menu by clicking on panels to find out more information about an exercise ![expanding the accordion menu of the exercise search result page](images/accordion.JPG)
-5. Alternatively, you can randomly pull data about an exercise and search for the target muscle to find other related exercises
+5. You can also start by searching for a muscle, such as `pectoralis major, clavicular`, on the muscle search page.
+6. Alternatively, you can randomly pull data about an exercise and search for the target muscle to find other related exercises
     - The search page for muscles will look like this ![a muscles search page](images/muscle_search.JPG)
     - The result page for a muscle search will look like this ![a muscles search result page](images/muscle_result.JPG)
 
@@ -47,6 +48,7 @@ My project aggregates information about exercises from ExRx.net (through web scr
 ## How to run tests
 - make sure you have run the project before running the tests
 1. Run `SI507project_tests.py`
+2. If everything is running correctly, all tests will be passed and you will see the following in your terminal: ![a screenshot of tests passing](images/tests.JPG)
 
 ## In this repository:
 - SI507project_data.py

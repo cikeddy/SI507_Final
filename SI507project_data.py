@@ -68,7 +68,7 @@ data = program_cache.get(top_directory_url)
 if not data:
     data = requests.get(top_directory_url).text
 
-    program_cache.set(top_directory_url, data, expire_in_days=10) # this data isn't going to change very much
+    program_cache.set(top_directory_url, data, expire_in_days=60) # this data isn't going to change very much
 
 soup = BeautifulSoup(data, "html.parser")
 
@@ -97,7 +97,7 @@ def get_exercise_links(obj):
         test_data = program_cache.get(url)
         if not test_data:
             test_data = requests.get(url).text
-            program_cache.set(url,test_data,expire_in_days=10)
+            program_cache.set(url,test_data,expire_in_days=60)
         test_soup = BeautifulSoup(test_data,"html.parser")
         links = test_soup.select("div > ul > li > ul> li > a", class_="col-sm-6")
         second_links = test_soup.select("div > ul > li > ul> li > ul > li > a", class_="col-sm-6")
@@ -143,7 +143,7 @@ def get_data(urls):
         if not data:
             data = requests.get(url).text
     
-            program_cache.set(url, data, expire_in_days=10) # this data isn't going to change very much
+            program_cache.set(url, data, expire_in_days=60) # this data isn't going to change very much
             time.sleep(.5)
     
         soup = BeautifulSoup(data, "html.parser")

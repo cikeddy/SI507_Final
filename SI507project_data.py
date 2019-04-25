@@ -79,10 +79,11 @@ def create_level2_url(url):
     level2_directory_url = "https://exrx.net/Lists/"
     return level2_directory_url + str(url)
 
-level2_urls = []
 
 
-def get_data(obj):
+
+def get_exercise_links(obj):
+    level2_urls = []
     for x in obj:
         if "https" not in x['href']: 
             level2_urls.append(create_level2_url(x['href']))
@@ -131,12 +132,13 @@ def get_data(obj):
     for x in exercise_urls:
         if x not in final_exercise_urls:
             final_exercise_urls.append(x)
-            
+    return final_exercise_urls
             
     
+    
+def get_data(urls):
     exercises_list = []
-    
-    for url in final_exercise_urls:
+    for url in urls:
         data = program_cache.get(url)
         if not data:
             data = requests.get(url).text

@@ -4,9 +4,11 @@ from bs4 import BeautifulSoup
 from sqlalchemy import create_engine
 from advanced_expiry_caching import Cache
 from SI507project_data import soup, program_cache,obj
+from SI507project_tools import get_exercise_links
+from SI507project_models import Muscle
 
 
-## check that random_ex returns something from a know muscle and that it returns two different exercises in one query 
+## check that random_ex returns two different exercises
 class PartOne(unittest.TestCase):    
     def test_get_random_ex(self):
         self.exercises_1 = get_random_exercise()
@@ -14,10 +16,15 @@ class PartOne(unittest.TestCase):
         self.assertNotEqual(self.exercises_1,self.exercises_2, "Testing that the get_random_exercises function returns two different  exercises")
         
 
-##  check that https://exrx.net/WeightExercises/ is the pre-fix to the exercise links
+##  check that get_exercise_links returns a list and that https://exrx.net/WeightExercises/ is the pre-fix to links
 class PartTwo(unittest.TestCase):
     def test_exercise_links(self):
-        self.links = get_data(obj)
+        self.links = get_exercise_links(obj)
+        self.type = [0,1]
+        self.assertEqual(type(self.links),type(self.type))
+    
+    def test_exercise_links(self):
+        self.links = get_exercise_links(obj)
         self.base = 'https://exrx.net/WeightExercises/'
         self.assertIn(self.base, self.links[1], "Testing that the URL for the first link has correct base")
         self.assertIn(self.base, self.links[20], "Testing that the URL for the 20th link has correct base")
@@ -48,12 +55,17 @@ class PartFour(unittest.TestCase):
         self.assertIsNotNone(self.soup.find('h1').text, "Testing that there is data in the Beautiful Soup object")
         
 
-## check that the database has all expected tables
+## check that the database has all expected tables and that data has been populated
 class PartFive(unittest.TestCase):
     def test_database_tables(self):
         self.engine = create_engine('sqlite:///./exercises.db')
         self.table_names = self.engine.table_names()
         self.assertEqual(self.table_names,['exercise_groups', 'exercises', 'forces', 'mechanics', 'muscles', 'utilities'])
+    
+    def test_database_data(self):
+        self.query = Muscle.query.filter_by(name='sternocleidomastoid').first()
+        self.assertIsNotNone(self.query)
+        
 
 
 if __name__ == "__main__":

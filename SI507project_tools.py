@@ -7,7 +7,7 @@ import os
 from flask import Flask, request, render_template, session, redirect, url_for # tools that will make it easier to build on things
 from flask_sqlalchemy import SQLAlchemy
 from SI507project_models import *
-from SI507project_data import get_data, obj
+from SI507project_data import get_data, get_exercise_links, obj
 
 
 
@@ -112,7 +112,7 @@ def data_view2():
 if __name__ == '__main__':
     db.create_all()
     if not Exercise.query.first():
-        exercises_list= get_data(obj)
+        exercises_list= get_data(get_exercise_links(obj))
         for ex in exercises_list:
             utility = get_or_create_utility(ex.utility,ex.mechanics)
             force = get_or_create_force(ex.force)

@@ -87,11 +87,6 @@ My project aggregates information about exercises from ExRx.net (through web scr
 
 ---
 ## Code Requirements for Grading
-Please check the requirements you have accomplished in your code as demonstrated.
-- [x] This is a completed requirement.
-- [ ] This is an incomplete requirement.
-
-Below is a list of the requirements listed in the rubric for you to copy and paste.  See rubric on Canvas for more details.
 
 ### General
 - [x] Project is submitted as a Github repository

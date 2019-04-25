@@ -5,7 +5,7 @@
 ---
 
 ## Project Description
-My project aggregates information about exercises from ExRx.net (through web scraping) and allows users to search by exercise name to get information about an exercise. The project  also allows users to search for a muscle and recieve a list of associated exercises that target that muscle. There is a route for the homepage with a greeting and count of number of exercises. There are also routes for searching by exercise, by muscle, and for viewing a randomly selected exercise with corresponding information. Finally there are routes that show all exercises and muscles in the database.
+My project aggregates data from ExRx.net (through web scraping) and incorporates it into a Flask app where users can retrieve information about the exercises. The app allows users to search by exercise name to get information about an exercise. The project also allows users to search for a muscle and receive a list of associated exercises that target that muscle. There is a route for the homepage with a greeting and count of number of exercises. There are also routes for searching by exercise, by muscle, and for viewing a randomly selected exercise with corresponding information. Finally there are routes that show all exercises and muscles in the database.
 
 
 ## My Database Schema
@@ -126,4 +126,4 @@ My project aggregates information about exercises from ExRx.net (through web scr
 
 ### Submission
 - [x] I included a link to my GitHub repository with the correct permissions on Canvas! (Did you though? Did you actually? Are you sure you didn't forget?)
-- [ ] I included a summary of my project and how I thought it went **in my Canvas submission**!
+- [x] I included a summary of my project and how I thought it went **in my Canvas submission**!
